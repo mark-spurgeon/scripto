@@ -1,0 +1,23 @@
+{
+  "name": "scriptomining",
+  "version": "0.0.1",
+  "description": "A new screenwriting file structure",
+  "main": "src/testlibrary.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "npm run",
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "not existing yet"
+  },
+  "author": "The Duck",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "fs": "0.0.1-security"
+  },
+  "devDependencies": {}
+}
