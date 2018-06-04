@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "npm run",
-    "start": "node src/index.js"
+    "start": "node src/testlibrary.js"
   },
   "repository": {
     "type": "git",

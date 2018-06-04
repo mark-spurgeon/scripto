@@ -1,143 +1,107 @@
 
-var acceptedTags = {
-  filespec:[
-    "# scripto ",
-    "#scripto ",
-    "# SCRIPTO ",
-    "#SCRIPTO "
-  ],
-  meta: [
-    "# meta :",
-    "#meta :",
-    "#meta:",
-    "# META :",
-    "#META :",
-    "#META:",
-  ],
-  global: [
-    "# global :",
-    "#global :",
-    "#global:",
-    "# GLOBAL :",
-    "#GLOBAL :",
-    "#GLOBAL:",
-  ],
-  script: [
-    "# script :",
-    "#script :",
-    "#script:",
-    "# SCRIPT :",
-    "#SCRIPT :",
-    "#SCRIPT:",
-  ]
+
+
+var dataSkeleton = {
+  filetype: {
+    version:"0.0.2",
+    url:"https://github.com/the-duck/scripto/"
+  },
+  meta: {
+    title:"",
+    synopsis:"",
+    authors:"",
+    address:"",
+    copyright:""
+  },
+  global: {
+    characters:[],
+    locations:[]
+  },
+  script: []
 }
 
-function stringToData(stringData) {
-
-  /* DATA OBJECT */
-  var ScriptoData = {
-    file: {
-      version:"0.0.1", //very first version,
-      url:"https://google.com"
-    },
-    meta: {},
-    global: {},
-    script:""
-  }
-
-  /* Split Data */
-  var filespeclist = []
-  for (var i = 0; i < acceptedTags.filespec.length; i++) {
-    if (stringData.indexOf(acceptedTags.filespec[i])>=0){
-      filespeclist.push(acceptedTags.filespec[i])
-    }
-  }
-  if (filespeclist.length!=1) {
-    console.warn('Warning : more than one filespec');
-  } else {
-    console.warn('filespec: OK');
-  }
-  var filespec = filespeclist[0]
-
-  var fileReg = RegExp(filespec+"(.*)\n").exec(stringData);
-  ScriptoData.file.version = fileReg[1].split(' ')[0];
-  ScriptoData.file.url = fileReg[1].split(' ')[1];
-
-  /* Metadata */
-
-  var metalist = []
-  for (var i = 0; i < acceptedTags.meta.length; i++) {
-    if (stringData.indexOf(acceptedTags.meta[i])>=0){
-      metalist.push(acceptedTags.meta[i])
-    }
-  }
-  if (metalist.length!=1) {
-    console.warn('Warning : more than one meta');
-  } else {
-    console.warn('meta: OK');
-  }
-  var meta = metalist[0];
-  var metaReg = RegExp(meta+"(.*)\n").exec(stringData);
-
-  var globallist = []
-  for (var i = 0; i < acceptedTags.global.length; i++) {
-    if (stringData.indexOf(acceptedTags.global[i])>=0){
-      globallist.push(acceptedTags.global[i])
-    }
-  }
-  if (globallist.length!=1) {
-    console.warn('Warning : more than one global');
-  } else {
-    console.warn('global: OK');
-  }
-  var global_ = globallist[0];
-  var globalReg = RegExp(global_+"(.*)\n").exec(stringData);
-
-  var scriptlist = []
-  for (var i = 0; i < acceptedTags.script.length; i++) {
-    if (stringData.indexOf(acceptedTags.script[i])>=0){
-      scriptlist.push(acceptedTags.script[i])
-    }
-  }
-  if (scriptlist.length!=1) {
-    console.warn('Warning : more than one meta');
-  } else {
-    console.warn('script: OK');
-  }
-  var script = scriptlist[0];
-  var scriptReg = RegExp(script+"(.*)\n").exec(stringData);
-
-  var metaData = stringData.toString().split(metaReg[0])[1].split(globalReg[0])[0];
-  var globalData= stringData.toString().split(metaReg[0])[1].split(globalReg[0])[1].split(scriptReg[0])[0];
-  var scriptData = stringData.toString().split(metaReg[0])[1].split(globalReg[0])[1].split(scriptReg[0])[1].trim();
-
-  ScriptoData.meta =  JSON.parse(metaData);
-  ScriptoData.global =  JSON.parse(globalData);
-  ScriptoData.script = scriptData;
-  return ScriptoData;
+function formatData(stringData) {
+  // TODO checking and stuff
+  return JSON.parse(stringData);
 }
-
 function dataToString(data) {
-  var ScriptoString = "";
-  /* File data */
-  ScriptoString = acceptedTags.filespec[0]+" "+data.file.version+" "+data.file.url+"\n\n";
-
-  /* Meta data */
-  ScriptoString += acceptedTags.meta[0]+"\n \n" + JSON.stringify(data.meta, null, 2)+"\n\n";
-  /* Global data */
-  ScriptoString += acceptedTags.global[0]+"\n \n" + JSON.stringify(data.global, null, 2)+"\n\n";
-  /* Script data */
-  ScriptoString += acceptedTags.script[0]+"\n \n" + data.script+"\n\n";
-  return ScriptoString;
+  // TODO impose new file version, convert and stuff
+  var newdata = data ;
+  newdata.filetype = dataSkeleton.filetype;
+  newdata.file = null;
+  return JSON.stringify(newdata, null, 2);
 }
 
+function getScriptObjects(scriptArray) {
+  var ScriptData = [];
+  var lastObjectType = "";
+  for (var i = 0; i < scriptArray.length; i++) {
+    var scriptLine = scriptArray[i];
+    var type = RegExp('§[a-zA-Z]+ ').exec(scriptLine);
+    if (type) {
+      var linenotype = scriptLine.replace(type[0], "");
+      var extraData = RegExp('\{(.*?)\}').exec(linenotype);
+      if (extraData) {
+        try {
+          var sFixed = extraData[0].replace(new RegExp("'", 'g'),"\"") //'{"identifier":"ID", "label":"LABEL"}'
+          var extra = JSON.parse(sFixed)
+        } catch (e) {
+          console.error(e);
+        }
+        var scriptValue = linenotype.replace(extraData[0], "");
+      } else {
+        var extra = null;
+        var scriptValue = linenotype;
+      }
+
+      ScriptData.push({type:type[0], content:scriptValue, extra: extra || null})
+    }
+    //var lineData = scriptLine.replace(type, "");
+  }
+
+  return ScriptData;
+
+}
 
 function Scripto(stringData) {
-  this.data = stringToData(stringData);
-  this.generateDataString = function () {return dataToString(this.data)};
+  this.data = dataSkeleton;
+  /* Input and output */
+  this.loadData = function(stringData) {
+    this.data = formatData(stringData);
+    return this.data;
+  };
+  this.getStringData = function () {
+    //TODO update this.data.script
+    return dataToString(this.data)
+  };
+
+  /* Get functions */
+  this.getWholeData = function() {return this.data}
   this.getMetaData = function () {return this.data.meta};
   this.getGlobalData = function () {return this.data.global};
   this.getScriptRaw = function () {return this.data.script};
+  this.getScript = function () {
+    return getScriptObjects(this.data.script)
+  }
+
+  /* Set functions*/
+  this.setMetaData = function () {
+    //TODO update this.data.meta
+    return this.data.meta
+  };
+  this.setGlobalData = function () {
+    //TODO update this.data.global
+    return this.data.global
+  };
+  // unrecommended --> dangerous to add all
+  this.setScript = function () {
+    //TODO
+    return getScriptObjects(this.data.script)
+  }
+  this.addScriptItem = function(position, item) {
+    // position : id of the item that is placed __before__ the new item
+    // TODO: add an item
+  }
 }
 /*Scripto.prototype.getString = function () {
   return dataToString(this.data);

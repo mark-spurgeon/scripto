@@ -11,6 +11,7 @@ File Structure
     Not the actual content, the script, but what's around it, like the author, his info, the title, and other
 
     > __json__ data
+
     ```
       {
         title: "The loved ones",

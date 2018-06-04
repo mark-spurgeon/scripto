@@ -1,5 +1,5 @@
 node_modules/*
 node_modules
-scripto_artwork/*
+scripto-artwork/*.afdesign
 .DS_Store
 package-lock.json
