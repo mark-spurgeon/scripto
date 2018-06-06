@@ -24,17 +24,13 @@
     ]
   },
   "script": [
-    "/* basic values */",
-    "",
-    "§A {'number':'auto', 'smaple':0} This is an act",
+    "§A Act 1 : this is an act",
     "§S This is a scene",
     "§C Character",
-    "§CA Character Action (or state/attitude)",
+    "§CA (enters the room)",
     "§D Dialogue (or just -logue)",
-    "§I Instructions (or detail of a certain location)",
+    "§I Instructions (or detail of rtain location)",
     "§P Paragraph (describes a setting or an action)",
-    "",
-    "/* Generic values : */",
     "§T Generic title",
     "§ST Generic subtitle"
   ],

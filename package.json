@@ -1,8 +1,8 @@
 {
-  "name": "scriptomining",
-  "version": "0.0.1",
+  "name": "scripto",
+  "version": "0.0.3",
   "description": "A new screenwriting file structure",
-  "main": "src/testlibrary.js",
+  "main": "src/scripto.js",
   "directories": {
     "example": "examples"
   },
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "not existing yet"
+    "url": "https://github.com/the-duck/scripto"
   },
   "author": "The Duck",
   "license": "GPL-3.0",

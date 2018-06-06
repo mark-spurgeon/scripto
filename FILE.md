@@ -50,3 +50,16 @@ This is a work in progress of what a `*.scripto` file will look like.
 
 
 ```
+
+
+## Resources
+*to figure out how screenplays work*
+
+[This is a bunch of links that I haven't looked at yet, to they might be crap]
+- https://blog.celtx.com/how-to-format-a-script-or-screenplay/
+- https://gointothestory.blcklst.com/read-2016-oscar-nominated-best-original-and-adapted-screenplays-41d898daa061
+- https://www.wikihow.com/Write-a-Screenplay
+- http://www.screenwriting.info/
+- https://en.wikipedia.org/wiki/Screenwriting
+- https://screenwriting.io/
+- https://screencraft.org/

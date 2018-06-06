@@ -28,13 +28,16 @@ function dataToString(data) {
   // TODO impose new file version, convert and stuff
   var newdata = data ;
   newdata.filetype = dataSkeleton.filetype;
-  newdata.file = null;
+  if (newdata.file) {
+    newdata.file = null;
+  }
   return JSON.stringify(newdata, null, 2);
 }
 
 function getScriptObjects(scriptArray) {
   var ScriptData = [];
   var lastObjectType = "";
+  var counter = 0;
   for (var i = 0; i < scriptArray.length; i++) {
     var scriptLine = scriptArray[i];
     var type = RegExp('§[a-zA-Z]+ ').exec(scriptLine);
@@ -54,7 +57,8 @@ function getScriptObjects(scriptArray) {
         var scriptValue = linenotype;
       }
 
-      ScriptData.push({type:type[0], content:scriptValue, extra: extra || null})
+      ScriptData.push({type:type[0].trim(), content:scriptValue, extra: extra || null, id:counter});
+      counter++;
     }
     //var lineData = scriptLine.replace(type, "");
   }
@@ -62,27 +66,34 @@ function getScriptObjects(scriptArray) {
   return ScriptData;
 
 }
+function setScriptFromObjects(scriptObjects){
+  var scriptList = [];
+  for (var i = 0; i < scriptObjects.length; i++) {
+    var scriptObject = scriptObjects[i];
+    var scriptString = scriptObject.type+" "+scriptObject.content;
+    scriptList.push(scriptString);
+  }
+  return scriptList;
+}
 
-function Scripto(stringData) {
+function Scripto() {
   this.data = dataSkeleton;
   /* Input and output */
   this.loadData = function(stringData) {
     this.data = formatData(stringData);
-    return this.data;
   };
   this.getStringData = function () {
     //TODO update this.data.script
-    return dataToString(this.data)
+    return dataToString(this.data);
   };
 
   /* Get functions */
   this.getWholeData = function() {return this.data}
-  this.getMetaData = function () {return this.data.meta};
-  this.getGlobalData = function () {return this.data.global};
-  this.getScriptRaw = function () {return this.data.script};
-  this.getScript = function () {
-    return getScriptObjects(this.data.script)
-  }
+  this.getMetaData = function () {return data.meta};
+  this.getGlobalData = function () {return this.data.global;};
+  this.getScriptRaw = function () {return this.data.script;};
+  this.getScript = function () {return getScriptObjects(this.data.script)} // depeciated
+  this.getScriptObjects = function () {return getScriptObjects(this.data.script)}
 
   /* Set functions*/
   this.setMetaData = function () {
@@ -94,17 +105,28 @@ function Scripto(stringData) {
     return this.data.global
   };
   // unrecommended --> dangerous to add all
-  this.setScript = function () {
+  this.setScript = function (scriptObjects) {
     //TODO
-    return getScriptObjects(this.data.script)
+    this.data.script = setScriptFromObjects(scriptObjects);
   }
   this.addScriptItem = function(position, item) {
     // position : id of the item that is placed __before__ the new item
     // TODO: add an item
   }
+  this.updateScriptItem = function(item) {
+    var items = this.getScript();
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].id==item.id){
+        items[i].content = item.content;
+      }
+    }
+    this.setScript(items);
+  }
 }
-/*Scripto.prototype.getString = function () {
-  return dataToString(this.data);
+/*Scripto.prototype.getScript = function () {
+  var d = this.data;
+  var sc = getScriptObjects(d);
+  return sc;
 }*/
 
 module.exports = {

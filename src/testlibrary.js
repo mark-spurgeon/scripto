@@ -1,4 +1,4 @@
-var scripto = require('./scriptosenso');
+var scripto = require('./scriptolib');
 var fs = require('fs');
 
 

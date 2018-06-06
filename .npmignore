@@ -1,0 +1,9 @@
+examples/
+scripto-artwork/
+node_modules/
+
+.DS_Store
+package-lock.json
+
+.git/
+.gitignore
