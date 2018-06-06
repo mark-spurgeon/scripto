@@ -1,14 +1,29 @@
 var ScriptoExpressions = [
-  /* N°1 Priority Expressions */
-  "§A", // Act
-  "§S", // Scene
-  "§C", // Character
-  "§CA", // Character's Action or State
-  "§D", // Dialogue, or -logue
-  "§I", // Instructions or used for 'micro-scenes' (in capital letters)
-  "§P", // Paragraph - description of state or action
-  /* Generic Expressions that might be useful, and used for multiple purposes */
-  "§T", // Title
-  "§ST", // Subtitle
-  "§DATE", // Program-controlled date data, might be useful for user but not final draft
-]
+  /* Screenplay Expressions */
+  "A",
+  "S",
+  "C",
+  "CA",
+  "D",
+  "I",
+  /* Generic Expressions */
+  "T",
+  "ST",
+  "P",
+];
+
+var ScriptoExpressionDictionary = {
+  "A":"Title of an act.",
+  "S": "Title of a scene. Example : EXT. - SOMEWHERE - DAY",
+  "C": "Character. Linked to a character's information (specification here)[#character]",
+  "D": "Dialogue.",
+  "I": "Instructions given for screen.",
+  "T": "Generic title. Used as screenplay's title but also other types",
+  "ST": "Generic subtitle",
+  "P": "Generic paragraph. Can describe an action or a setting as well.",
+}
+
+module.exports = {
+  ScriptoExpressions,
+  ScriptoExpressionDictionary
+}
